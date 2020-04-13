@@ -4,7 +4,6 @@ public class Order {
 	
 	public String orderId;
 	public String destination;
-
 	public Flight flight;
 
 	public Order(String orderId, String destination){

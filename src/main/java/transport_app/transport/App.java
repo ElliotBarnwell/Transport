@@ -29,6 +29,10 @@ public class App
 	public static ArrayList<Order> orders;
     public static void main(String[] args)
     {
+    	flights = new ArrayList<Flight>();
+    	orders = new ArrayList<Order>();
+    	//load orders from json file
+    	getOrders();
         input = new Scanner(System.in);
 
         String strInput;
@@ -59,7 +63,6 @@ public class App
     //allow the user to input flights
     public static void loadFlights(){
     	String userInput;
-    	flights = new ArrayList<Flight>();
     	do {
     	System.out.println("Please input the flight id");
     	String flightId = input.nextLine();
@@ -93,9 +96,9 @@ public class App
     
     //Schedule a batch of orders to flights and output the orders to the user
     public static void scheduleOrders(){
-    	getOrders();
     	for (Order order: orders){
-    		if(!flights.isEmpty()){
+    		//confirm that order has not been assigned and that flights exist
+    		if(!flights.isEmpty() && order.getFlight()==null){
     			for (Flight flight: flights){
     				//if the arrival of the flight is the same as the order destination add the order to flight
     				if (flight.getArrival().equals(order.getDestination()) && !flight.isFull()){
@@ -120,7 +123,6 @@ public class App
     
     //load orders from json file
     public static void getOrders(){
-    	orders = new ArrayList<Order>();
     	JSONParser parser = new JSONParser();
     	String dir = System.getProperty("user.dir");
     	try {
