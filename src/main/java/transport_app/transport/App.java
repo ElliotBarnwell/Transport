@@ -4,7 +4,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ import transport_app.transport.objects.Order;
 public class App 
 {
 	public static Scanner input;
-	public static String ordersFileName = "coding-assignment-orders.json";
+	public static String ordersFileName = "coding-assigment-orders.json";
 	public static ArrayList<Flight> flights;
 	public static ArrayList<Order> orders;
     public static void main(String[] args)
@@ -55,6 +56,7 @@ public class App
         } while(strInput!="exit");         
     }
     
+    //allow the user to input flights
     public static void loadFlights(){
     	String userInput;
     	flights = new ArrayList<Flight>();
@@ -76,19 +78,20 @@ public class App
     	flights.add(flight);
     	
     	System.out.println("Would you like to enter another flight? yes/no");
-    	//input.hasNext();
     	userInput = input.nextLine();
     	
     	} while (userInput.equals("yes"));
 
     }
     
+    //output the list of flights to the user
     public static void listFlights(){
     	for(Flight flight: flights){
         	System.out.println(String.format("Flight: %s, departure: %s, arrival: %s, day: %d", flight.getFlightId(), flight.getDeparture(), flight.getArrival(), flight.getDay()));
     	}
     }
     
+    //Schedule a batch of orders to flights and output the orders to the user
     public static void scheduleOrders(){
     	getOrders();
     	for (Order order: orders){
@@ -115,16 +118,19 @@ public class App
     	
     }
     
+    //load orders from json file
     public static void getOrders(){
     	orders = new ArrayList<Order>();
     	JSONParser parser = new JSONParser();
     	String dir = System.getProperty("user.dir");
     	try {
-    		Reader reader = new FileReader(dir + ordersFileName);
+    		Reader reader = new FileReader(dir + "/" + ordersFileName);
     		JSONObject rawOrders = (JSONObject) parser.parse(reader);
     		Set<String> keys = rawOrders.keySet();
-    		for (String key : keys){
-    			HashMap<String, JSONObject> rawOrder = (HashMap<String, JSONObject>) rawOrders.get(key);
+    		List<String> orderedKeys = new ArrayList<String>(keys);
+    		Collections.sort(orderedKeys);
+    		for (String key : orderedKeys){
+    			JSONObject rawOrder = (JSONObject) rawOrders.get(key);
     			orders.add(new Order(key, rawOrder.get("destination").toString()));
     		}
     	}catch (IOException e){

@@ -19,6 +19,7 @@ public class Flight {
 		this.day = day;
 		this.capacity = 20;
 		this.full = false;
+		orders = new ArrayList<Order>();
 	}
 	
 	public void addOrder(Order order){
